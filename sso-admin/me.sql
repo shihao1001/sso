@@ -1,6 +1,4 @@
 
-
-
 create database sso;
 
 create table u_user(
