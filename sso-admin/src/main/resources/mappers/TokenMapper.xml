@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shihao.sso.admin.mapper.TokenMapper" >
+    <resultMap id="BaseResultMap" type="com.shihao.sso.admin.dao.bean.TokenDO" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="user_id" property="userId" jdbcType="BIGINT" />
+        <result column="token" property="token" jdbcType="VARCHAR" />
+        <result column="expire_time" property="expireTime" jdbcType="TIMESTAMP" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="is_active" property="isActive" jdbcType="TINYINT" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id, user_id, token, expire_time, create_time, update_time, is_active
+    </sql>
+    
+     <select id = "getByTokenStr" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select 
+        <include refid="Base_Column_List" />
+        from u_token
+        where token = #{token};
+    </select>
+    
+    <select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select 
+        <include refid="Base_Column_List" />
+        from u_token
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="delById" parameterType="java.lang.Long" >
+        delete from u_token
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="save" parameterType="com.shihao.sso.admin.dao.bean.TokenDO" useGeneratedKeys="true" keyProperty="id" >
+        insert into u_token (user_id, token, expire_time, is_active
+            )
+        values (#{userId,jdbcType=BIGINT}, #{token,jdbcType=VARCHAR}, #{expireTime,jdbcType=TIMESTAMP}, 
+             #{isActive,jdbcType=TINYINT}
+            )
+    </insert>
+    <update id="modifySelective" parameterType="com.shihao.sso.admin.dao.bean.TokenDO" >
+        update u_token
+        <set >
+            <if test="userId != null" >
+                user_id = #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="token != null" >
+                token = #{token,jdbcType=VARCHAR},
+            </if>
+            <if test="expireTime != null" >
+                expire_time = #{expireTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null" >
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null" >
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isActive != null" >
+                is_active = #{isActive,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="modify" parameterType="com.shihao.sso.admin.dao.bean.TokenDO" >
+        update u_token
+        set user_id = #{userId,jdbcType=BIGINT},
+            token = #{token,jdbcType=VARCHAR},
+            expire_time = #{expireTime,jdbcType=TIMESTAMP},
+            create_time = #{createTime,jdbcType=TIMESTAMP},
+            update_time = #{updateTime,jdbcType=TIMESTAMP},
+            is_active = #{isActive,jdbcType=TINYINT}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>

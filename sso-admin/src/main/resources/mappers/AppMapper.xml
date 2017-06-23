@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shihao.sso.admin.mapper.AppMapper">
+    <resultMap id="BaseResultMap" type="com.shihao.sso.admin.dao.bean.AppDO">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="code" jdbcType="VARCHAR" property="code" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="callback" jdbcType="VARCHAR" property="callback" />
+        <result column="md5_salt" jdbcType="VARCHAR" property="md5Salt" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, code, name, callback, md5_salt, create_time, update_time
+    </sql>
+    
+   
+    
+    <select id="getByCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+       select 
+        <include refid="Base_Column_List" />
+        from a_app
+        where code = #{code}
+    </select>
+    
+    <select id="getById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select 
+        <include refid="Base_Column_List" />
+        from a_app
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="delById" parameterType="java.lang.Integer">
+        delete from a_app
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="save" keyProperty="id" parameterType="com.shihao.sso.admin.dao.bean.AppDO" useGeneratedKeys="true">
+        insert into a_app (code, name, callback, 
+            md5_salt, create_time, update_time
+            )
+        values (#{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{callback,jdbcType=VARCHAR}, 
+            #{md5Salt,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <update id="modifySelective" parameterType="com.shihao.sso.admin.dao.bean.AppDO">
+        update a_app
+        <set>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="callback != null">
+                callback = #{callback,jdbcType=VARCHAR},
+            </if>
+            <if test="md5Salt != null">
+                md5_salt = #{md5Salt,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="modify" parameterType="com.shihao.sso.admin.dao.bean.AppDO">
+        update a_app
+        set code = #{code,jdbcType=VARCHAR},
+            name = #{name,jdbcType=VARCHAR},
+            callback = #{callback,jdbcType=VARCHAR},
+            md5_salt = #{md5Salt,jdbcType=VARCHAR},
+            create_time = #{createTime,jdbcType=TIMESTAMP},
+            update_time = #{updateTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+  </mapper>
